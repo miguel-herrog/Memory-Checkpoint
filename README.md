@@ -1,23 +1,24 @@
 # Memory Checkpoint
 
-Gestor y lanzador de sesiones para emuladores desarrollado en **Java** que automatiza la sincronización bidireccional de partidas guardadas, verificación de integridad mediante **SHA-256** y control de versiones histórico en **MySQL**.
+Emulator session launcher and manager built in **Java** that automates bidirectional cloud save synchronization, **SHA-256** integrity verification, and historical version control using **MySQL**.
 
-> **Estado del proyecto:** 🚧 *En desarrollo activo (Work in Progress)*
+> **Project Status:** *Active Development (Work in Progress)*
 
-## Objetivo
-Los emuladores clásicos sobrescriben los archivos de guardado (`.sav`, `.srm`) directamente en disco sin control de versiones, y las nubes genéricas pueden corromper las partidas si sincronizan el archivo mientras el emulador sigue abierto. **Memory Checkpoint** actúa como un *wrapper* que:
-1. **Antes de jugar (Pre-Launch):** Verifica el hash SHA-256 local frente al registro en MySQL y descarga automáticamente la partida más reciente si se jugó en otro dispositivo.
-2. **Durante la sesión:** Lanza el proceso del emulador con `ProcessBuilder` y monitoriza el tiempo de juego.
-3. **Al cerrar el emulador (Post-Exit):** Calcula de forma asíncrona (`ExecutorService`) el nuevo hash SHA-256. Si la partida ha cambiado, comprime el archivo, sube una nueva copia incremental a la nube y registra la transacción en MySQL permitiendo hacer *rollback* a cualquier versión anterior.
+## Overview & Problem Statement
+Classic emulators overwrite save files (`.sav`, `.srm`) directly on disk without version control, and generic cloud sync clients can corrupt save data if they sync files while the emulator is still writing to them. **Memory Checkpoint** acts as a session wrapper that:
 
-## Stack Tecnológico
-* **Lenguaje:** Java 21 (POO, Multithreading con `ExecutorService`, `ProcessBuilder`, Java NIO.2, `MessageDigest` SHA-256).
-* **Base de Datos y Persistencia:** MySQL (InnoDB) + JDBC (Patrón DAO y transacciones ACID).
+1. **Pre-Launch (Pull):** Verifies the local save file's SHA-256 hash against the MySQL database and automatically downloads the latest save state if progress was made on another device.
+2. **In-Game (Session Tracking):** Launches the emulator process via `ProcessBuilder` and monitors active playtime in the background.
+3. **Post-Exit (Push & Versioning):** Asynchronously computes (`ExecutorService`) the new SHA-256 hash upon closing the emulator. If the save file changed, it compresses the file, uploads an incremental backup to the cloud, and records the transaction in MySQL—allowing instant rollback to any previous checkpoint.
+
+## Tech Stack
+* **Language:** Java 21 (OOP, Multithreading with `ExecutorService`, `ProcessBuilder`, Java NIO.2, `MessageDigest` SHA-256).
+* **Database & Persistence:** MySQL (InnoDB) + JDBC (DAO Pattern and ACID transactions).
 * **Build Tool:** Apache Maven.
 
-## Hoja de Ruta (Roadmap)
-- [x] Diseño de arquitectura y esquema relacional de base de datos (`sql/schema.sql`).
-- [ ] **Fase 1:** Configuración del proyecto Maven y capa de persistencia JDBC (Patrón DAO y transacciones en MySQL).
-- [ ] **Fase 2:** Motor de verificación de integridad SHA-256 y lanzador de procesos con `ProcessBuilder` y `ExecutorService`.
-- [ ] **Fase 3:** Servicio de empaquetado incremental y sincronización remota (Pre-launch pull / Post-exit push).
-- [ ] **Fase 4:** Interfaz de línea de comandos (CLI) y sistema de restauración de versiones anteriores (*Rollback*).
+## Roadmap
+- [ ] **Architecture & Database Design:** Relational schema definition (`sql/schema.sql`).
+- [ ] **Phase 1:** Maven project setup and JDBC persistence layer (DAO pattern and MySQL transactions).
+- [ ] **Phase 2:** SHA-256 integrity verification engine and process wrapper using `ProcessBuilder` and `ExecutorService`.
+- [ ] **Phase 3:** Incremental packaging service and remote cloud synchronization (Pre-launch pull / Post-exit push).
+- [ ] **Phase 4:** Command-Line Interface (CLI) and checkpoint rollback system.
