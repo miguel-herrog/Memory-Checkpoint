@@ -18,7 +18,7 @@ Classic emulators overwrite save files (`.sav`, `.srm`) directly on disk without
 
 ## Roadmap
 - [x] **Architecture & Database Design:** Relational schema definition (`sql/schema.sql`).
-- [ ] **Phase 1:** Maven project setup and JDBC persistence layer (DAO pattern and MySQL transactions).
+- [x] **Phase 1:** Maven project setup and JDBC persistence layer (DAO pattern and MySQL transactions).
 - [ ] **Phase 2:** SHA-256 integrity verification engine and process wrapper using `ProcessBuilder` and `ExecutorService`.
 - [ ] **Phase 3:** Incremental packaging service and remote cloud synchronization (Pre-launch pull / Post-exit push).
 - [ ] **Phase 4:** Command-Line Interface (CLI) and checkpoint rollback system.
