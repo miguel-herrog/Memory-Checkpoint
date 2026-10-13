@@ -1,5 +1,4 @@
 package com.miguelherrog.memorycheckpoint.model;
-
 import java.time.LocalDateTime;
 
 public class GameProfile {
